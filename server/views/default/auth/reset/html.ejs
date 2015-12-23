@@ -1,0 +1,10 @@
+<% include ../../head %>
+  <div>
+    Click in the big button below to reset your password<br>
+  </div>
+  <% if(typeof token != "undefined") { %>
+    <layout>
+      <a href="<%= baseUrl %>/auth/password/reset?token=<%= token %>">Reset password</a>
+    </layout>
+  <% } %>
+<% include ../../footer %>

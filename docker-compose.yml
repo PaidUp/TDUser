@@ -1,0 +1,11 @@
+tdusers_db:
+  image: library/mongo:3.0
+  ports:
+    - "27017:27017"
+
+tdusers_api:
+  build: .
+  ports:
+    - "9001:9001"
+  links:
+    - tdusers_db

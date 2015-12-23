@@ -1,0 +1,1789 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TDUSer",
+    "description": "TDUser",
+    "version": "1.0.0"
+  },
+  "host": "localhost:9001",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "basePath": "/api/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/local/signup": {
+      "post": {
+        "operationId": "postCredential",
+        "summary": "Sign up user with email and password. (TDAuthService.signup)",
+        "description": "Add credential to user <br /> Public API. Not authenticated users can consume it. <br /> Only applies to User with no createdBy attribute. <br /> Only applies to User with no existing credentials.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "user",
+          "in": "body",
+          "description": "User model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthCredential"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user credential added",
+            "schema": {
+              "$ref": "#/definitions/signUpResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "User permission error",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          },
+          "404": {
+            "description": "User does not exists error",
+            "schema": {
+              "$ref": "AuthCredentialNotExists"
+            }
+          },
+          "409": {
+            "description": "User credentials conflict error",
+            "schema": {
+              "$ref": "AuthCredentialExists"
+            }
+          }
+        }
+      }
+    },
+    "/auth/local/login": {
+      "post": {
+        "operationId": "postCredentialLogin",
+        "summary": "Login user with email and password. (TDAuthService.login)",
+        "description": "Login user into the system",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "user",
+          "in": "body",
+          "description": "User login credentials",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthLogin"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user credential added",
+            "schema": {
+              "$ref": "#/definitions/postAuthResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "User permission error",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout/userId/{userId}": {
+      "get": {
+        "operationId": "credentialLogout",
+        "summary": "Logout user the system. (TDAuthService.logout)",
+        "description": "Logout user out the system. is need send token in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "userId",
+          "in": "path",
+          "description": "user Id",
+          "required": true,
+          "type": "string"
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user logout the system",
+            "schema": {
+              "$ref": "#/definitions/postAuthResponse"
+            }
+          }
+        }
+      }
+    },
+    "/auth/facebook": {
+      "post": {
+        "operationId": "postAuthFacebook",
+        "summary": "Sign up or Login user using Facebook Connect (TDAuthService.facebook)",
+        "description": "After authorizing the Facebook App, consume this webservice with the Facebook token to login or sign up",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "facebook",
+          "in": "body",
+          "description": "Facebook model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthFacebook"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user credential added",
+            "schema": {
+              "$ref": "#/definitions/postAuthResponse"
+            }
+          },
+          "403": {
+            "description": "Facebook token permission error",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify": {
+      "post": {
+        "operationId": "postAuthVerify",
+        "summary": "Verify user in the system with email's token. (TDAuthService.verify)",
+        "description": "Using the token sent by email, verify the ownership of the user's email.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "verifyToken",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthVerify"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user verified"
+          },
+          "400": {
+            "description": "Token validation error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-request/userId/{userId}": {
+      "get": {
+        "operationId": "postSendAuthVerify",
+        "summary": "Re send verify email's token to the current logged user. (TDAuthService.verifyRequest)",
+        "description": "Restricted API to USER role.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [{
+          "name": "userId",
+          "in": "path",
+          "description": "user id",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful verify email sent"
+          }
+        }
+      }
+    },
+    "/auth/password/reset-request": {
+      "post": {
+        "operationId": "postAuthPasswordResetRequest",
+        "summary": "Reset password request. (TDAuthService.passwordResetRequest)",
+        "description": "Reset password of user using a valid token.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "email",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthPasswordResetRequest"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful reset user password sent.",
+            "schema": {
+              "$ref": "#/definitions/requestPasswordChange"
+            }
+          }
+        }
+      }
+    },
+    "/auth/password/reset": {
+      "post": {
+        "operationId": "postAuthPasswordReset",
+        "summary": "Reset password request. (TDAuthService.passwordReset)",
+        "description": "Sends an email to the user primary email with a token to be able to reset the password.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "email",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postAuthPasswordReset"
+          }
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful reset user password sent.",
+            "schema": {
+              "$ref": "#/definitions/postAuthPasswordReset"
+            }
+          }
+        }
+      }
+    },
+    "/auth/password/update/userId/{userId}": {
+      "post": {
+        "operationId": "postPasswordUpdate",
+        "summary": "Update password to user. (TDAuthService.passwordUpdate)",
+        "description": "Restricted API to USER authenticated with parent, is need send token in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "updatePassword",
+          "in": "body",
+          "description": "password update model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postPasswordUpdate"
+          }
+        }, {
+          "name": "userId",
+          "in": "path",
+          "description": "user id",
+          "required": true,
+          "type": "string"
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user password update",
+            "schema": {
+              "$ref": "#/definitions/postPasswordUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "PermissionError",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          }
+        }
+      }
+    },
+    "/auth/email/update/userId/{userId}": {
+      "post": {
+        "operationId": "postEmailupdate",
+        "summary": "Update email to user. (TDAuthService.emailUpdate)",
+        "description": "Restricted API to USER authenticated and parent of athlete, is need send token in the body.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "updateEmail",
+          "in": "body",
+          "description": "email update model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postEmailUpdate"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user email update",
+            "schema": {
+              "$ref": "#/definitions/postEmailUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "PermissionError",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          }
+        }
+      }
+    },
+    "/user/create": {
+      "post": {
+        "operationId": "postUser",
+        "summary": "Create User (TDUserService.create)",
+        "description": "Create User on the platform. <br /> Public API. Not authenticated users can consume it.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "user",
+          "in": "body",
+          "description": "User model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUser"
+          }
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user creation",
+            "schema": {
+              "$ref": "#/definitions/postUserResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/user/current?token={token}": {
+      "get": {
+        "operationId": "getUser",
+        "summary": "Returns the current user details (TDUserService.current)",
+        "description": "Get User from the platform. <br /> Restricted API to USER role.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "token",
+          "in": "path",
+          "description": "Auth token",
+          "required": true,
+          "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns current user",
+            "schema": {
+              "$ref": "#/definitions/getUserResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/update/userId/{userId}": {
+      "post": {
+        "operationId": "postUserUpdate",
+        "summary": "Update user. (TDUserService.update)",
+        "description": "Restricted API to USER authenticated and parent of athlete.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "updateUser",
+          "in": "body",
+          "description": "email user model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserUpdate"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user update",
+            "schema": {
+              "$ref": "#/definitions/postUserUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "PermissionError",
+            "schema": {
+              "$ref": "AuthCredentialPermission"
+            }
+          }
+        }
+      }
+    },
+    "/user/find": {
+      "post": {
+        "operationId": "postUserFind",
+        "summary": "Create User (TDUserService.find)",
+        "description": "find User(s) on the platform. <br /> authenticated users can consume it. to find user you should send the body empty: {}. if you want find a specific user, you should send the filter in the body, example: {id:XXX}",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "user",
+          "in": "body",
+          "description": "User find model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserFind"
+          }
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user creation",
+            "schema": {
+              "$ref": "#/definitions/postUserFindResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/user/contact/create/userId/{userId}": {
+      "post": {
+        "operationId": "postUserContact",
+        "summary": "Add contact to user. (TDUserService.contactCreate)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "contact",
+          "in": "body",
+          "description": "Contact model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserContact"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact creation",
+            "schema": {
+              "$ref": "#/definitions/postUserContactResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/user/contact/list/userId/{userId}": {
+      "post": {
+        "operationId": "postUserContactList",
+        "summary": "List user contacts. (TDUserService.contactList)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "userId",
+          "in": "body",
+          "description": "user id",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserContactList"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact list",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/postUserContactListResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/contact/load/userId/{userId}/contactId/{contactId}": {
+      "get": {
+        "operationId": "postUserContactLoad",
+        "summary": "List user contacts. (TDUserService.contactLoad)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "contactId",
+            "in": "path",
+            "description": "contact Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact list",
+            "schema": {
+              "type": "Object",
+              "items": {
+                "$ref": "#/definitions/getUserContactLoadResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/contact/update/userId/{userId}/contactId/{contactId}": {
+      "put": {
+        "operationId": "putUserContact",
+        "summary": "Modify contact to user. (TDUserService.contactUpdate)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "contact",
+          "in": "body",
+          "description": "Contact model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserContactUpdate"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "contactId",
+            "in": "path",
+            "description": "contact Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact creation",
+            "schema": {
+              "$ref": "#/definitions/postUserContactResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "ContactId not found"
+          }
+        }
+      }
+    },
+    "/user/contact/delete/userId/{userId}/contactId/{contactId}": {
+      "delete": {
+        "operationId": "putUserContact",
+        "summary": "Modify contact to user. (TDUserService.contactDelete)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "contactId",
+            "in": "path",
+            "description": "contact Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact creation"
+            
+          }
+        }
+      }
+    },
+    "/user/address/create/userId/{userId}": {
+      "post": {
+        "operationId": "postUserAddress",
+        "summary": "Add contact to user. (TDUserService.addressCreate)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "address",
+          "in": "body",
+          "description": "Address model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserAddress"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact creation",
+            "schema": {
+              "$ref": "#/definitions/postUserAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/user/address/list/userId/{userId}": {
+      "post": {
+        "operationId": "postUserAddressList",
+        "summary": "List user contacts. (TDUserService.addressList)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact list",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/postUserAddressListResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/address/load/userId/{userId}/addressId/{addressId}": {
+      "get": {
+        "operationId": "postUserAddressLoad",
+        "summary": "List user contacts. (TDUserService.addressLoad)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "addressId",
+            "in": "path",
+            "description": "address Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user address load",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/postUserAddressLoadResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/address/update/userId/{userId}/addressId/{addressId}": {
+      "put": {
+        "operationId": "putUserAddress",
+        "summary": "Modify contact to user. (TDUserService.addressUpdate)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "address",
+          "in": "body",
+          "description": "Address model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserAddressUpdate"
+          }
+        },
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "addressId",
+            "in": "path",
+            "description": "address Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user contact creation",
+            "schema": {
+              "$ref": "#/definitions/postUserAddressResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          },
+          "403": {
+            "description": "ContactId not found"
+          }
+        }
+      }
+    },
+    "/user/address/delete/userId/{userId}/addressId/{addressId}": {
+      "delete": {
+        "operationId": "deleteUserAddress",
+        "summary": "Delete address to user. (TDUserService.addressDelete)",
+        "description": "Restricted API to USER role",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "name": "addressId",
+            "in": "path",
+            "description": "address Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user address delete"
+            
+          }
+        }
+      }
+    },
+    "/user/relation/create": {
+      "post": {
+        "operationId": "postUserRelationCreate",
+        "summary": "Create User family relation. (TDUserService.relationCreate)",
+        "description": "Create User family relation on the platform. <br /> Restricted API to USER role. <br /> Currently supporting child relation.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "relation",
+          "in": "body",
+          "description": "User Relation model",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/postUserRelation"
+          }
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user creation",
+            "schema": {
+              "$ref": "#/definitions/postUserRelationResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "/user/relation/list/userId/{userId}": {
+      "get": {
+        "operationId": "postUserRelationList",
+        "summary": "List User family relation. (TDUserService.relationList)",
+        "description": "List User family relation on the platform. <br /> Restricted API to USER role. <br /> Currently supporting child relation.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+            "name": "userId",
+            "in": "path",
+            "description": "user Id",
+            "required": true,
+            "type": "string"
+        }],
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful user creation",
+            "schema": {
+              "$ref": "#/definitions/postUserRelationListResponse"
+            }
+          },
+          "400": {
+            "description": "Validation field error",
+            "schema": {
+              "$ref": "ValidationError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "postUser": {
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "First name of the User",
+          "maximum": 128
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the User",
+          "maximum": 128
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "Date of birth, date format yyyy-mm-dd"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender of user, enum[male, female]",
+          "enum": [
+            "male",
+            "female"
+          ]
+        },
+        "height": {
+          "type": "integer",
+          "description": "User height in inches",
+          "format": "int",
+          "minimum": 0
+        },
+        "weight": {
+          "type": "integer",
+          "description": "User weight in pounds",
+          "format": "int",
+          "minimum": 0
+        }
+      }
+    },
+    "postUserResponse": {
+      "required": [
+        "userId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Unique identifier of User. Alphanum id"
+        }
+      }
+    },
+    "postUserContact": {
+      "required": [
+        "userId",
+        "label",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "userId": 
+        {
+          "type": "string",
+          "description": "Userid to add contact info.",
+          "maximum": 128
+        },
+        "label": 
+        {
+          "type": "string",
+          "description": "User free text labeling",
+          "maximum": 128
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of contact, enum[email, telephone]",
+          "enum": [
+            "email",
+            "telephone"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "Value of the contact.",
+          "format": "string"
+        }
+      }
+    },
+    "postUserContactUpdate": {
+      "required": [
+        "userId",
+        "value"
+      ],
+      "properties": {
+        "userId": 
+        {
+          "type": "string",
+          "description": "Userid to add contact info.",
+          "maximum": 128
+        },
+        "value": {
+          "type": "string",
+          "description": "Value of the contact.",
+          "format": "string"
+        }
+      }
+    },
+    "postUserLoanContact": {
+      "required": [
+        "userId",
+        "label",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "userloanId to add contact info",
+          "maximum": 128
+        },
+        "label": {
+          "type": "string",
+          "description": "User free text labeling",
+          "maximum": 128
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of contact, enum[email, telephone]",
+          "enum": [
+            "email",
+            "telephone"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "Value of the contact.",
+          "format": "string"
+        }
+      }
+    },
+    "postUserContactList": {
+      "required": [
+        "userId"
+      ],
+      "properties": {
+        "userId": 
+        {
+          "type": "string",
+          "description": "Userid to list contact info."
+        }
+      }
+    },
+    "postUserContactListResponse": {
+      "properties": {
+        "contacts": {
+          "type": "Object",
+          "description": "Array contacts object of user."
+        }
+      }
+    },
+    "getUserContactLoadResponse": {
+      "required": [
+        "contactId"
+      ],
+      "properties": {
+        "contactId": {
+          "type": "string",
+          "description": "id contact object of user."
+        },
+        "type": {
+          "type": "string",
+          "description": "type contact of user."
+        },
+        "label": {
+          "type": "string",
+          "description": "label contact of user"
+        },
+        "value": {
+          "type": "string",
+          "description": "value contact of user."
+        }
+      }
+    },
+    "postUserContactResponse": {
+      "required": [
+        "contactId"
+      ],
+      "properties": {
+        "contactId": {
+          "type": "string",
+          "description": "Unique identifier of User Contact. Alphanum id"
+        }
+      }
+    },
+    "postUserLoanContactResponse": {
+      "required": [
+        "contactId"
+      ],
+      "properties": {
+        "contactId": {
+          "type": "string",
+          "description": "Unique identifier of User Contact. Alphanum id"
+        }
+      }
+    },
+    "getUserResponse": {
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "AlfaNum User unique id"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the User"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the User"
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "Date of birth, date format yyyy-mm-dd",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender of user, enum[male, female]",
+          "enum": [
+            "male",
+            "female"
+          ]
+        },
+        "height": {
+          "type": "number",
+          "description": "User height in inches",
+          "format": "int",
+          "minimum": 0
+        },
+        "weight": {
+          "type": "number",
+          "description": "User weight in pounds",
+          "format": "int",
+          "minimum": 0
+        }
+      }
+    },
+    "postUserRelation": {
+      "required": [
+        "sourceUserId",
+        "targetUserId",
+        "type"
+      ],
+      "properties": {
+        "sourceUserId": {
+          "type": "string",
+          "description": "AlfaNum User unique id"
+        },
+        "targetUserId": {
+          "type": "string",
+          "description": "AlfaNum User unique id"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of relation, enum[child]",
+          "enum": [
+            "child"
+          ]
+        }
+      }
+    },
+    "postAuthCredential": {
+      "required": [
+        "userId",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "AlfaNum User unique id"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email to sign up"
+        },
+        "password": {
+          "type": "string",
+          "description": "User Passwocrd"
+        },
+        "rememberMe": {
+          "type": "boolean",
+          "description": "Remember me login expire unlimited"
+        }
+      }
+    },
+    "postAuthLogin": {
+      "required": [
+        "email",
+        "password",
+        "rememberMe"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User email to login"
+        },
+        "password": {
+          "type": "string",
+          "description": "User password"
+        },
+        "rememberMe": {
+          "type": "boolean",
+          "description": "Remember me login expire unlimited"
+        }
+      }
+    },
+    "postAuthLogout": {
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "token user"
+        }
+      }
+    },
+    "signUpResponse": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "AlfaNum token unique id"
+        },
+        "user": {
+          "type": "Object",
+          "description": "object containig user email, firstName and lastName"
+        },
+        "emailToken": {
+          "type": "string",
+          "description": "AlfaNum token to activate the acount"
+        }
+      }
+    },
+    "requestPasswordChange": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "user": {
+          "type": "Object",
+          "description": "object containig user email, firstName and lastName"
+        },
+        "emailToken": {
+          "type": "string",
+          "description": "AlfaNum token to activate the acount"
+        }
+      }
+    },
+    "postAuthResponse": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "AlfaNum token unique id"
+        }
+      }
+    },
+    "postAuthFacebook": {
+      "required": [
+        "facebookToken"
+      ],
+      "properties": {
+        "facebookToken": {
+          "type": "string",
+          "description": "AlfaNum Facebook token unique id"
+        }
+      }
+    },
+    "postAuthVerify": {
+      "required": [
+        "verifyToken"
+      ],
+      "properties": {
+        "verifyToken": {
+          "type": "string",
+          "description": "AlfaNum token to verify user"
+        }
+      }
+    },
+    "postSendAuthVerify": {
+      "required": [
+        "userId"
+      ],
+      "properties": {
+        "verifyToken": {
+          "type": "string",
+          "description": "AlfaNum User unique id"
+        }
+      }
+    },
+    "postAuthVerifyResponse": {
+      "required": [
+        "userId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User id was successful verified in the system"
+        }
+      }
+    },
+    "postAuthPasswordResetRequest": {
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User email to send the email with token"
+        }
+      }
+    },
+    "postAuthPasswordReset": {
+      "required": [
+        "verifyToken",
+        "password"
+      ],
+      "properties": {
+        "verifyToken": {
+          "type": "string",
+          "description": "User email to send the email with token"
+        },
+        "password": {
+          "type": "string",
+          "description": "User email to send the email with token"
+        }
+      }
+    },
+    "Auth": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "ValidationError": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "default": "ValidationError"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error description",
+          "default": "Field error description"
+        },
+        "errors": {
+          "type": "string",
+          "description": "Optional detail of errors",
+          "default": "Optional array with detail of errors"
+        }
+      }
+    },
+    "AuthCredentialExists": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "default": "AuthCredentialExists"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error description",
+          "default": "Credential of user already exists"
+        }
+      }
+    },
+    "AuthCredentialNotExists": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "default": "AuthCredentialNotExists"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error description",
+          "default": "User Id does not exists"
+        }
+      }
+    },
+    "AuthCredentialPermission": {
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error description",
+          "default": "You don't have permission for this operation"
+        }
+      }
+    },
+    "postEmailUpdate": {
+      "required": [
+        "userId",
+        "email"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UserId user to update",
+          "maximum": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "user email to update",
+          "enum": [
+            "email",
+            "telephone"
+          ]
+        }
+      }
+    },
+    "postEmailUpdateResponse": {
+      "properties": {
+        "res": {
+          "type": "boolean",
+          "description": "Identifier if email was update seccesful"
+        }
+      }
+    },
+    "postPasswordUpdate": {
+      "required": [
+        "newPassword",
+        "currentPassword"
+      ],
+      "properties": {
+        "newPassword": {
+          "type": "string",
+          "description": "user new password to update"
+        },
+        "currentPassword": {
+          "type": "string",
+          "description": "user current password to update"
+        }
+      }
+    },
+    "postPasswordUpdateResponse": {
+      "properties": {
+        "res": {
+          "type": "boolean",
+          "description": "Identifier if password was update seccesful"
+        }
+      }
+    },
+    "postUserUpdate": {
+      "required": [
+        "userId",
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UserId user to update",
+          "maximum": 128
+        },
+        "firstName": {
+          "type": "string",
+          "description": "user firstName to update"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "user lastName to update"
+        },
+        "gender": {
+          "type": "string",
+          "description": "user gender to update"
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "user birthDate to update, date format yyyy-mm-dd"
+        }
+      }
+    },
+    "postUserUpdateResponse": {
+      "properties": {
+        "res": {
+          "type": "boolean",
+          "description": "Identifier if email was update seccesful"
+        }
+      }
+    },
+    "postUserFind": {
+    },
+    "postUserFindResponse": {
+      "required": [
+        "users"
+      ],
+      "properties": {
+        "users": {
+          "type": "Array",
+          "description": "Array of user(s)."
+        }
+      }
+    },
+    "postUserAddress": {
+      "required": [
+        "type",
+        "label",
+        "address1",
+        "address2",
+        "city",
+        "state",
+        "country",
+        "zipCode"
+      ],
+      "properties": {
+        "type": 
+        {
+          "type": "string",
+          "description": "type to add address info. valid types: (shipping, billing, other, loan)"
+        },
+        "label": 
+        {
+          "type": "string",
+          "description": "label to add address info."
+        },
+        "address1": {
+          "type": "string",
+          "description": "address1 to add address info."
+        },
+        "address2": {
+          "type": "string",
+          "description": "address2 to add address info.",
+          "format": "string"
+        },
+        "city": {
+          "type": "string",
+          "description": "city to add address info.",
+          "format": "string"
+        },
+        "state": {
+          "type": "string",
+          "description": "state to add address info.",
+          "format": "string"
+        },
+        "country": {
+          "type": "string",
+          "description": "country to add address info.",
+          "format": "string"
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "zipCode to add address info.",
+          "format": "string"
+        }
+      }
+    },
+    "postUserAddressResponse": {
+      "required": [
+        "addressId"
+      ],
+      "properties": {
+        "addressId": {
+          "type": "string",
+          "description": "Unique identifier of User Address. Alphanum id"
+        }
+      }
+    },
+    "postUserAddressListResponse": {
+      "properties": {
+        "addresses": {
+          "type": "Object",
+          "description": "Array addresses object of user."
+        }
+      }
+    },
+    "postUserAddressLoadResponse": {
+      "required": [
+        "addressId"
+      ],
+      "properties": {
+        "addressId": {
+          "type": "string",
+          "description": "Unique identifier of User Address. Alphanum id"
+        }
+      }
+    },
+    "postUserAddressUpdate": {
+      "required": [
+        "label",
+        "address1",
+        "address2",
+        "city",
+        "state",
+        "country",
+        "zipCode"
+      ],
+      "properties": {
+        "label": 
+        {
+          "type": "string",
+          "description": "label to add address info."
+        },
+        "address1": {
+          "type": "string",
+          "description": "address1 to add address info."
+        },
+        "address2": {
+          "type": "string",
+          "description": "address2 to add address info.",
+          "format": "string"
+        },
+        "city": {
+          "type": "string",
+          "description": "city to add address info.",
+          "format": "string"
+        },
+        "state": {
+          "type": "string",
+          "description": "state to add address info.",
+          "format": "string"
+        },
+        "country": {
+          "type": "string",
+          "description": "country to add address info.",
+          "format": "string"
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "zipCode to add address info.",
+          "format": "string"
+        }
+      }
+    },
+    "postUserContactResponse": {
+      "required": [
+        "addressId"
+      ],
+      "properties": {
+        "addressId": {
+          "type": "string",
+          "description": "Unique identifier of User Address. Alphanum id"
+        }
+      }
+    },
+    "postUserRelationResponse": {
+      "properties": {
+      }
+    },
+    "postUserRelationListResponse": {
+      "properties": {
+        "Relations": {
+          "type": "Array",
+          "description": "Array relations object of user."
+        }
+      }
+    }
+  }
+}

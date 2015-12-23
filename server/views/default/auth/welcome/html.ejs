@@ -1,0 +1,12 @@
+<% include ../../head %>
+  <div>
+    <div>
+      Please activate your acount<br>
+    </div>
+    <% if(typeof token != "undefined") { %>
+      <layout>
+        <a href="<%= baseUrl %>/auth/verify/email?token=<%= token %>" class="btnActivate">Activate account</a>
+      </layout>
+    <% } %>
+  </div>
+<% include ../../footer %>
