@@ -7,3 +7,5 @@ dist
 /var
 build/
 .DS_Store
+/server/config/environment/development.js
+/server/config/environment/production.js
