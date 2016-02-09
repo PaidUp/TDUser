@@ -4,7 +4,6 @@ public
 .idea
 client/bower_components
 dist
-/var
 build/
 .DS_Store
 /server/config/environment/development.js
