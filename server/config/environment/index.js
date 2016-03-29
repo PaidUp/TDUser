@@ -45,6 +45,21 @@ var all = {
   TDTokens:{
     me:'TDUserToken-CHANGE-ME!'
   },
+
+  logger:{
+    level: {
+      info:'info',
+      warn:'warn',
+      error:'error'
+    },
+    loggly:{
+      inputToken:'e2834f96-0326-43f1-8fd9-04dd669a11ef',
+      subdomain: "cstest",
+      tags: ["TDUser"],
+      level: 'error'
+    }
+  },
+
   // Email system
   emailService:{
     service: 'Gmail',

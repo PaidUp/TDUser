@@ -100,11 +100,11 @@ function validateToken(req, res, next) {
  * Returns a jwt token signed by the app secret
  */
 function signToken(id, rembemberMe) {
-  var expireTime = TOKEN_EXPIRATION_MIN;
+  var expireTime = TOKEN_EXPIRATION_MIN * 60;
   if(rembemberMe){
-      expireTime = TOKEN_EXPIRATION_MAX;
+      expireTime = TOKEN_EXPIRATION_MAX * 60;
   }
-  var token = jwt.sign({ _id: id , salt : uuid.v4()}, config.secrets.session, { expiresInMinutes: expireTime });
+  var token = jwt.sign({ _id: id , salt : uuid.v4()}, config.secrets.session, { expiresIn: expireTime });
   return token;
 }
 
