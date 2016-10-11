@@ -2,6 +2,8 @@
 
 var mongoose = require('mongoose');
 var User = require('./user.model.js');
+var Address = require('./address/address.model.js');
+var Contact = require('./contact/contact.model.js');
 var moment = require('moment');
 var Blind = require('blind');
 var isValidSSN = require('is-valid-ssn');
@@ -26,6 +28,41 @@ function create(user, cb) {
       return cb(null, data);
     }
   );
+};
+
+function createAll(user, cb) {
+  console.log('user: ' , user)
+  var newUser = new User({
+        email: user.email,
+        password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+  var newAddress = new Address({ 
+        "type": "shipping",
+        "label": "shipping",
+        "address1": user.address,
+        "address2": "",
+        "city": user.city,
+        "state": user.state,
+        "country": user.country,
+        "zipCode": user.zipCode
+      })
+  var newContact = new Contact({
+            "label" : "shipping",
+            "type" : "telephone",
+            "value" : user.phone
+        })
+
+  newUser.addresses = [newAddress];
+  newUser.contacts = [newContact];
+  
+  newUser.save(function(err, data){
+    if(err) {
+        return cb(err);
+      }
+      return cb(null, data);
+  });
 }
 
 function validateGenderSync(gender) {
@@ -178,3 +215,4 @@ exports.encryptSSN = encryptSSN;
 exports.decryptSSN = decryptSSN;
 exports.verifySSN = verifySSN;
 exports.getlast4ssn = getlast4ssn;
+exports.createAll = createAll;
