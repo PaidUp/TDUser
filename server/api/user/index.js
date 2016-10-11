@@ -7,6 +7,7 @@ var authCoreService = require('TDCore').authCoreService;
 
 var router = express.Router();
 router.post('/create', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.create);
+router.post('/create/all', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.createAll);
 router.get('/current', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.me);
 router.post('/update/userId/:userId', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.update);
 router.post('/find', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.find);

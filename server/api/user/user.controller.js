@@ -66,6 +66,53 @@ exports.create = function(req, res) {
   });
 };
 
+exports.createAll = function(req, res){
+  var body = req.body;
+  if(!body){
+    return res.status(422).json({message: 'request can`t be empty'});
+  }
+  if(!body.firstName){
+    return res.status(422).json({message: 'firstName is require'});
+  }
+  if(!body.lastName){
+    return res.status(422).json({message: 'lastName is require'});
+  }
+  if(!body.email){
+    return res.status(422).json({message: 'email is require'});
+  }
+  if(!body.password){
+    return res.status(422).json({message: 'password is require'});
+  }
+  if(!body.address){
+    return res.status(422).json({message: 'address is require'});
+  }
+  if(!body.city){
+    return res.status(422).json({message: 'city is require'});
+  }
+  if(!body.state){
+    return res.status(422).json({message: 'state is require'});
+  }
+  if(!body.country){
+    return res.status(422).json({message: 'country is require'});
+  }
+  if(!body.zipCode){
+    return res.status(422).json({message: 'zipCode is require'});
+  }
+  if(!body.phone){
+    return res.status(422).json({message: 'phone is require'});
+  }
+
+  
+
+  userService.createAll(body, function(err, data){
+    if(err){
+      return res.status(500).json(err);
+    }
+    return res.status(200).json(data);
+  })
+
+}
+
 exports.me = function(req, res, next) {
   authService.decryptToken(req.query.token, function(err, id){
     if(err){
