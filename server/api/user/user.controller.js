@@ -101,6 +101,9 @@ exports.createAll = function(req, res){
   if(!body.phone){
     return res.status(422).json({message: 'phone is require'});
   }
+  if(!body.getFrom){
+    return res.status(422).json({message: 'getFrom is require'});
+  }
 
   
 

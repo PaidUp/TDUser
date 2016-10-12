@@ -56,6 +56,10 @@ function createAll(user, cb) {
 
   newUser.addresses = [newAddress];
   newUser.contacts = [newContact];
+
+  newUser.meta = {
+    getFrom: user.getFrom
+  }
   
   newUser.save(function(err, data){
     if(err) {
