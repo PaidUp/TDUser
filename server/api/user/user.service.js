@@ -9,11 +9,12 @@ var Blind = require('blind');
 var isValidSSN = require('is-valid-ssn');
 var config = require('../../config/environment/index');
 
-function save(user, cb) {createFacebookUser
+function save(user, cb) {
+  createFacebookUser
   delete user.addresses;
   delete user.contacts;
-  user.save(function(err, data) {
-    if(err) {
+  user.save(function (err, data) {
+    if (err) {
       return cb(err);
     }
     return cb(null, data);
@@ -21,38 +22,38 @@ function save(user, cb) {createFacebookUser
 }
 
 function create(user, cb) {
-  User.create(user, function(err, data) {
-      if(err) {
-        return cb(err);
-      }
-      return cb(null, data);
+  User.create(user, function (err, data) {
+    if (err) {
+      return cb(err);
     }
+    return cb(null, data);
+  }
   );
 };
 
 function createAll(user, cb) {
-  console.log('user: ' , user)
+  console.log('user: ', user)
   var newUser = new User({
-        email: user.email,
-        password: user.password,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      });
-  var newAddress = new Address({ 
-        "type": "shipping",
-        "label": "shipping",
-        "address1": user.address,
-        "address2": "",
-        "city": user.city,
-        "state": user.state,
-        "country": user.country,
-        "zipCode": user.zipCode
-      })
+    email: user.email,
+    password: user.password,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  });
+  var newAddress = new Address({
+    "type": "shipping",
+    "label": "shipping",
+    "address1": user.address,
+    "address2": "",
+    "city": user.city,
+    "state": user.state,
+    "country": user.country,
+    "zipCode": user.zipCode
+  })
   var newContact = new Contact({
-            "label" : "shipping",
-            "type" : "telephone",
-            "value" : user.phone
-        })
+    "label": "shipping",
+    "type": "telephone",
+    "value": user.phone
+  })
 
   newUser.addresses = [newAddress];
   newUser.contacts = [newContact];
@@ -60,17 +61,17 @@ function createAll(user, cb) {
   newUser.meta = {
     getFrom: user.getFrom
   }
-  
-  newUser.save(function(err, data){
-    if(err) {
-        return cb(err);
-      }
-      return cb(null, data);
+
+  newUser.save(function (err, data) {
+    if (err) {
+      return cb(err);
+    }
+    return cb(null, data);
   });
 }
 
 function validateGenderSync(gender) {
-  if(gender != 'male' && gender != 'female'){
+  if (gender != 'male' && gender != 'female') {
     return false;
   }
   return true;
@@ -78,7 +79,7 @@ function validateGenderSync(gender) {
 
 function validateBirthDateSync(birthDate) {
   var isFuture = moment(moment(birthDate)).isAfter(new Date());
-  if(moment(birthDate).format() === 'Invalid date'  || isFuture){
+  if (moment(birthDate).format() === 'Invalid date' || isFuture) {
     return false;
   }
   return true;
@@ -86,36 +87,36 @@ function validateBirthDateSync(birthDate) {
 
 var regExp = /^[a-zA-Z\s]*$/;
 function validateFirstNameSync(firstName) {
-  if(!regExp.test(firstName) || firstName === '' || firstName === undefined || firstName === null || firstName.length > 128 ){
+  if (!regExp.test(firstName) || firstName === '' || firstName === undefined || firstName === null || firstName.length > 128) {
     return false;
   }
   return true;
 }
 
 function validateLastNameSync(lastName) {
-  if(!regExp.test(lastName) || lastName === '' || lastName === undefined || lastName === null || lastName.length > 128 ){
+  if (!regExp.test(lastName) || lastName === '' || lastName === undefined || lastName === null || lastName.length > 128) {
     return false;
   }
   return true;
 }
 
 function findOne(filter, fields, cb) {
-  User.findOne(filter, fields, function(err, data) {
-      if(err) {
-        return cb(err);
-      }
-      return cb(null, data);
+  User.findOne(filter, fields, function (err, data) {
+    if (err) {
+      return cb(err);
     }
+    return cb(null, data);
+  }
   );
 }
 
 function findById(id, cb) {
   User.findById(id, function (err, user) {
-      if(err) {
-        return cb(err);
-      }
-      return cb(null, user);
+    if (err) {
+      return cb(err);
     }
+    return cb(null, user);
+  }
   );
 }
 
@@ -128,38 +129,38 @@ function createFacebookUser(fbUser, cb) {
       id: fbUser.id,
       email: fbUser.email
     },
-    verify:{
-      status:"verified",
+    verify: {
+      status: "verified",
       updatedAt: new Date()
     }
   };
-  if(fbUser.isParent === false){
+  if (fbUser.isParent === false) {
     newFbUser.roles = [];
     newFbUser.roles.push("coach");
   }
   this.create(newFbUser, function (err, data) {
-    if(err) return cb(err);
-      return cb(null, data);
+    if (err) return cb(err);
+    return cb(null, data);
   });
 }
-function mergeFacebookUser(dataUser ,cb) {
+function mergeFacebookUser(dataUser, cb) {
   dataUser.user.facebook = {
     id: dataUser.fbUser.id,
     email: dataUser.fbUser.email
   };
   this.save(dataUser.user, function (err, data) {
-    if(err) return cb(err);
+    if (err) return cb(err);
     return cb(null, data);
   });
 }
 
-function find(filter,fields, cb) {
-  User.find(filter,fields, function(err, data) {
-      if(err) {
-        return cb(err);
-      }
-      return cb(null, data);
+function find(filter, fields, cb) {
+  User.find(filter, fields, function (err, data) {
+    if (err) {
+      return cb(err);
     }
+    return cb(null, data);
+  }
   );
 }
 
@@ -167,8 +168,8 @@ function update(filter, value, cb) {
   delete value.hashedPassword;
   delete value.addresses;
   delete value.contacts;
-  User.update(filter, value, function(err, data) {
-    if(err) {
+  User.update(filter, value, function (err, data) {
+    if (err) {
       return cb(err);
     }
     return cb(null, data);
@@ -176,19 +177,19 @@ function update(filter, value, cb) {
 }
 
 function validateOnlyLetterSync(word) {
-  if(!regExp.test(word) || word === '' || word === undefined || word === null){
+  if (!regExp.test(word) || word === '' || word === undefined || word === null) {
     return false;
   }
   return true;
 }
 
 var encryptKey = config.encryptKey;
-function encryptSSN(ssn){
+function encryptSSN(ssn) {
   var encrypted = new Blind({ encryptKey: encryptKey }).encrypt(ssn);
   return encrypted;
 }
 
-function decryptSSN(encryptedSSN){
+function decryptSSN(encryptedSSN) {
   var decrypted = new Blind({ encryptKey: encryptKey }).decrypt(encryptedSSN);
   return decrypted;
 }
@@ -197,9 +198,16 @@ function verifySSN(ssn) {
   return isValidSSN(ssn);
 }
 
-function getlast4ssn(encryptedSSN){
+function getlast4ssn(encryptedSSN) {
   var last4snn = decryptSSN(encryptedSSN);
   return last4snn.substring(last4snn.length - 4, last4snn.length);
+}
+
+function updateProductsSuggested(id, productsSuggested, cb) {
+  User.findByIdAndUpdate(id, { $set: { 'meta.productsSuggested': productsSuggested } }, { new: false }, function (err, user) {
+    if (err) return cb(err);
+    cb(null, user);
+  });
 }
 
 exports.save = save;
@@ -220,3 +228,4 @@ exports.decryptSSN = decryptSSN;
 exports.verifySSN = verifySSN;
 exports.getlast4ssn = getlast4ssn;
 exports.createAll = createAll;
+exports.updateProductsSuggested = updateProductsSuggested;

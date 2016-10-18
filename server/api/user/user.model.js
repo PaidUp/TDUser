@@ -83,6 +83,10 @@ var UserSchema = new Schema({
         type: String,
         default: ''
       },
+      productsSuggested:{
+        type: Object,
+        default: {}
+      }
     }
 });
 

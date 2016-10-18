@@ -10,6 +10,7 @@ router.post('/create', authCoreService.isAuthenticatedServer(config.TDTokens.me)
 router.post('/create/all', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.createAll);
 router.get('/current', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.me);
 router.post('/update/userId/:userId', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.update);
+router.post('/:userId/update/products', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.updateProductsSuggested);
 router.post('/find', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.find);
 
 router.post('/save', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.save);
