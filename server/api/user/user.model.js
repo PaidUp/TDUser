@@ -78,6 +78,14 @@ var UserSchema = new Schema({
       data: {
         type: Object,
         default: {}
+      },
+      getFrom:{
+        type: String,
+        default: ''
+      },
+      productsSuggested:{
+        type: Object,
+        default: {}
       }
     }
 });
