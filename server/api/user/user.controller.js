@@ -111,7 +111,8 @@ exports.createAll = function (req, res) {
     if (err) {
       return res.status(500).json(err);
     }
-    return res.status(200).json(data);
+    body.id = data._id
+    return res.status(200).json(body);
   })
 
 }
