@@ -13,6 +13,37 @@ var UserTeamSchema = new Schema({
   name: {type: String}
 });
 
+var meta = new Schema({
+      TDPaymentId:{
+        type: String,
+        default: ''
+      },
+      TDCommerceId:{
+        type: String,
+        default: ''
+      },
+      providerStatus:{
+        type: String,
+        default: ''
+      },
+      productRelated:{
+        type: Array,
+        default: []
+      },
+      data: {
+        type: Object,
+        default: {}
+      },
+      getFrom:{
+        type: String,
+        default: ''
+      },
+    productsSuggested: {
+        type: String,
+        default: '{}'
+      }
+    });
+
 var UserSchema = new Schema({
     firstName: { type: String, required: true},
     lastName: { type: String, required: true},
@@ -58,36 +89,7 @@ var UserSchema = new Schema({
     payment: {},
     ssn: String,
     teams: [UserTeamSchema],
-    meta:{
-      TDPaymentId:{
-        type: String,
-        default: ''
-      },
-      TDCommerceId:{
-        type: String,
-        default: ''
-      },
-      providerStatus:{
-        type: String,
-        default: ''
-      },
-      productRelated:{
-        type: Array,
-        default: []
-      },
-      data: {
-        type: Object,
-        default: {}
-      },
-      getFrom:{
-        type: String,
-        default: ''
-      },
-      productsSuggested:{
-        type: Object,
-        default: {}
-      }
-    }
+    meta: meta
 });
 
 /**
@@ -233,5 +235,8 @@ UserSchema.methods = {
     return this.firstName + " " + this.lastName;
   }
 };
+
+UserSchema.set('toObject', { virtuals: true})
+UserSchema.set('toJSON', { virtuals: true})
 
 module.exports = mongoose.model('User', UserSchema, config.mongo.options.prefix + 'users');
