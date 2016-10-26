@@ -720,29 +720,6 @@ describe('User', function() {
       });
     });
 
-      it("allows to save an object", function (done) {
-        var user = new User({
-          firstName: userSpecModel.user.firstName,
-          lastName: userSpecModel.user.lastName,
-          meta: {
-            data: {
-              myKey1: "1",
-              myKey2: 2,
-              myKey3: {
-                myKey4: 4.0
-              }
-            }
-          }
-        });
-        userService.save(user, function(err, data){
-          assert.equal(err, null);
-          assert(data._id);
-          assert.isDefined(data.meta);
-          done();
-        });
-      });
-    });
-
     it('create', function (done) {
       var user = new User({
         firstName: userSpecModel.user.firstName,
