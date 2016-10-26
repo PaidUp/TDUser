@@ -69,40 +69,40 @@ exports.create = function (req, res) {
 exports.createAll = function (req, res) {
   var body = req.body;
   if (!body) {
-    return res.status(422).json({ message: 'request can`t be empty' });
+    return res.status(400).json({ message: 'request can`t be empty' });
   }
   if (!body.firstName) {
-    return res.status(422).json({ message: 'firstName is require' });
+    return res.status(400).json({ message: 'firstName is required' });
   }
   if (!body.lastName) {
-    return res.status(422).json({ message: 'lastName is require' });
+    return res.status(400).json({ message: 'lastName is required' });
   }
   if (!body.email) {
-    return res.status(422).json({ message: 'email is require' });
+    return res.status(400).json({ message: 'email is required' });
   }
   if (!body.password) {
-    return res.status(422).json({ message: 'password is require' });
+    return res.status(400).json({ message: 'password is required' });
   }
   if (!body.address) {
-    return res.status(422).json({ message: 'address is require' });
+    return res.status(400).json({ message: 'address is required' });
   }
   if (!body.city) {
-    return res.status(422).json({ message: 'city is require' });
+    return res.status(400).json({ message: 'city is required' });
   }
   if (!body.state) {
-    return res.status(422).json({ message: 'state is require' });
+    return res.status(400).json({ message: 'state is required' });
   }
   if (!body.country) {
-    return res.status(422).json({ message: 'country is require' });
+    return res.status(400).json({ message: 'country is required' });
   }
   if (!body.zipCode) {
-    return res.status(422).json({ message: 'zipCode is require' });
+    return res.status(400).json({ message: 'zipCode is required' });
   }
   if (!body.phone) {
-    return res.status(422).json({ message: 'phone is require' });
+    return res.status(400).json({ message: 'phone is required' });
   }
   if (!body.getFrom) {
-    return res.status(422).json({ message: 'getFrom is require' });
+    return res.status(400).json({ message: 'getFrom is required' });
   }
 
 
@@ -134,6 +134,32 @@ exports.me = function (req, res, next) {
         message: "Couldn't find a user with the given token"
       });
       res.status(200).json(user);
+    });
+
+  });
+};
+
+exports.currentStr = function (req, res, next) {
+  authService.decryptToken(req.query.token, function (err, id) {
+    if (err) {
+      return res.status(401).json({
+        code: "AuthFailed",
+        message: "Authentication token is invalid"
+      });
+    }
+    userService.findOne({
+      _id: id
+    }, '-salt -hashedPassword -verify.token -verify.updatedAt -role -updateAt -createAt -resetPassword', function (err, user) { // don't ever give out the password or salt
+      if (err) return next(err);
+      if (!user) return res.status(401).json({
+        code: "AuthFailed",
+        message: "Couldn't find a user with the given token"
+      });
+      var tmp = user.toJSON();
+      var resp = JSON.stringify(tmp)
+      console.log("@@@Meta: ", user)
+      console.log("@@@USER: ", tmp)
+      res.status(200).json({value: resp});
     });
 
   });
@@ -290,7 +316,7 @@ exports.updateProductsSuggested = function (req, res, next) {
     });
   }
 
-  userService.productsSuggested(id, productsSuggested, function (err, user) {
+  userService.updateProductsSuggested(id, productsSuggested, function (err, user) {
     if (err) {
       return res.status(500).json(err);
     } else {

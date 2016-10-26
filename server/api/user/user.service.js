@@ -32,7 +32,6 @@ function create(user, cb) {
 };
 
 function createAll(user, cb) {
-  console.log('user: ', user)
   var newUser = new User({
     email: user.email,
     password: user.password,
@@ -204,7 +203,7 @@ function getlast4ssn(encryptedSSN) {
 }
 
 function updateProductsSuggested(id, productsSuggested, cb) {
-  User.findByIdAndUpdate(id, { $set: { 'meta.productsSuggested': productsSuggested } }, { new: false }, function (err, user) {
+  User.findByIdAndUpdate(id, { $set: { 'meta.productsSuggested': productsSuggested.value } }, { new: true }, function (err, user) {
     if (err) return cb(err);
     cb(null, user);
   });
