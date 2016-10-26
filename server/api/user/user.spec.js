@@ -720,22 +720,6 @@ describe('User', function() {
       });
     });
 
-    describe("'data' in 'meta' field", function () {
-      it("saves an empty object by default", function (done) {
-        var user = new User({
-          firstName: userSpecModel.user.firstName,
-          lastName: userSpecModel.user.lastName
-        });
-        userService.save(user, function(err, data){
-          assert.equal(err, null);
-          assert(data._id);
-          assert.isDefined(data.meta);
-          assert.isDefined(data.meta.data);
-          assert.deepEqual(data.meta.data, {});
-          done();
-        });
-      });
-
       it("allows to save an object", function (done) {
         var user = new User({
           firstName: userSpecModel.user.firstName,
@@ -754,8 +738,6 @@ describe('User', function() {
           assert.equal(err, null);
           assert(data._id);
           assert.isDefined(data.meta);
-          assert.isDefined(data.meta.data);
-          assert.deepEqual(data.meta.data, { myKey1: "1", myKey2: 2, myKey3: { myKey4: 4.0 } } );
           done();
         });
       });
