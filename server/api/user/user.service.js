@@ -58,7 +58,7 @@ function createAll(user, cb) {
   newUser.contacts = [newContact];
 
   newUser.meta = {
-    getFrom: user.getFrom
+    referrer: user.referrer
   }
 
   newUser.save(function (err, data) {
