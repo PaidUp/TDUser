@@ -34,7 +34,7 @@ var meta = new Schema({
         type: Object,
         default: {}
       },
-      getFrom:{
+      referrer:{
         type: String,
         default: ''
       },
