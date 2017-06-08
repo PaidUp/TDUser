@@ -22,7 +22,7 @@ function findByEmail(req, res) {
         "message": err
       });
     }
-    res.status(200).json(products);
+    res.status(200).json({products: products});
   }
   );
 }
