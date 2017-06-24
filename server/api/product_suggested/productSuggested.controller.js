@@ -34,17 +34,28 @@ function findByEmail(req, res) {
 }
 
 function findAndDelete(req, res) {
-  Product.find({ email: req.body.email, category: req.body.category  }, function (err, products) {
+  if (!req.body.category) {
+    Product.remove({ email: req.body.email }, function (err) {
+      if (err) {
+        return res.status(500).json({
+          "message": err
+        });
+      }
+    });
+    return res.status(200).json({ result: true });
+  }
+
+  Product.find({ email: req.body.email, category: req.body.category }, function (err, products) {
     if (err) {
       return res.status(500).json({
         "message": err
       });
     }
-    if (products.length === 1){
+    if (products.length === 1) {
       products[0].remove();
     } else {
-      products.forEach(function(prod) {
-        if(prod.product === req.body.product){
+      products.forEach(function (prod) {
+        if (prod.product === req.body.product) {
           prod.remove()
         }
       });
