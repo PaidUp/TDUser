@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Product = require('./ProductSuggested.model')
+const Product = require('./productSuggested.model')
 
 function save(req, res) {
   var prod = new Product(req.body)
