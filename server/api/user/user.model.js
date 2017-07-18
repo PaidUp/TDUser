@@ -57,7 +57,7 @@ var UserSchema = new Schema({
     gender: String,
     payment: {},
     ssn: String,
-    teams: [UserTeamSchema],
+    teams: [String],
     meta: {
       TDPaymentId:{
         type: String,
