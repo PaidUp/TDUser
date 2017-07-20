@@ -12,4 +12,4 @@ var ProductSuggestedSchema = new Schema({
   createAt: {type: Date, default: new Date()},
 });
 
-module.exports = mongoose.model('tduser_produc', ProductSuggestedSchema);
+module.exports = mongoose.model('tduser_product', ProductSuggestedSchema);
