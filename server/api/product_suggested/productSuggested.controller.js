@@ -22,6 +22,17 @@ function save(req, res) {
   })
 }
 
+function save(req, res) {
+  Product.findOneAndUpdate(req.body, {}, {new: true, upsert: true}, function (err, products) {
+      if (err) {
+        return res.status(500).json({
+          "message": err
+        });
+      }
+      res.status(200).json({ products: products });
+    });
+}
+
 function findByEmail(req, res) {
   Product.find({ email: req.params.email }, function (err, products) {
     if (err) {
