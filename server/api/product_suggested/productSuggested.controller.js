@@ -23,14 +23,14 @@ function save(req, res) {
 }
 
 function save(req, res) {
-  Product.findOneAndUpdate(req.body, {}, {new: true, upsert: true}, function (err, products) {
-      if (err) {
-        return res.status(500).json({
-          "message": err
-        });
-      }
-      res.status(200).json({ products: products });
-    });
+  Product.findOneAndUpdate(req.body, {}, { new: true, upsert: true }, function (err, products) {
+    if (err) {
+      return res.status(500).json({
+        "message": err
+      });
+    }
+    res.status(200).json({ products: products });
+  });
 }
 
 function findByEmail(req, res) {
@@ -45,34 +45,19 @@ function findByEmail(req, res) {
 }
 
 function findAndDelete(req, res) {
-  if (!req.body.category) {
-    Product.remove({ email: req.body.email }, function (err) {
-      if (err) {
-        return res.status(500).json({
-          "message": err
-        });
-      }
-    });
-    return res.status(200).json({ result: true });
-  }
+  Product.findOneAndRemove(req.body, { passRawResult: true }, function (err, result) {
+    if (result) return res.status(200).json(result);
+    delete req.body.paymentPlan
+    Product.findOneAndRemove(req.body, { passRawResult: true }, function (err1, result1) {
+      if (result1) return res.status(200).json(result1);
+      delete req.body.product
+      Product.findOneAndRemove(req.body, { passRawResult: true }, function (err2, result2) {
+        if (result2) return res.status(200).json(result2);
+        res.status(200).json({});
+      })
+    })
+  })
 
-  Product.find({ email: req.body.email, category: req.body.category }, function (err, products) {
-    if (err) {
-      return res.status(500).json({
-        "message": err
-      });
-    }
-    if (products.length === 1) {
-      products[0].remove();
-    } else {
-      products.forEach(function (prod) {
-        if (prod.product === req.body.product) {
-          prod.remove()
-        }
-      });
-    }
-    res.status(200).json({ result: true });
-  });
 }
 
 exports.save = save
