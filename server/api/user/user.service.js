@@ -84,7 +84,8 @@ function validateBirthDateSync(birthDate) {
   return true;
 }
 
-var regExp = /^[a-zA-Z\s]*$/;
+//var regExp = /^[a-zA-Z\s]*$/;
+var regExp =    /^[a-zA-Z\s\.'-]*$/
 function validateFirstNameSync(firstName) {
   if (!regExp.test(firstName) || firstName === '' || firstName === undefined || firstName === null || firstName.length > 128) {
     return false;
