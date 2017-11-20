@@ -2,6 +2,7 @@
 
 var config = require('../../config/environment');
 var User = require('./user.model');
+const Permission = require("../permissions/permissions.model");
 var userService = require('./user.service');
 var mongoose = require('mongoose');
 var authService = require('../auth/auth.service');
@@ -119,7 +120,9 @@ exports.createAll = function (req, res) {
 
 exports.me = function (req, res, next) {
   authService.decryptToken(req.query.token, function (err, id) {
+    console.log(err)
     if (err) {
+
       return res.status(401).json({
         code: "AuthFailed",
         message: "Authentication token is invalid"
@@ -133,9 +136,22 @@ exports.me = function (req, res, next) {
         code: "AuthFailed",
         message: "Couldn't find a user with the given token"
       });
-      res.status(200).json(user);
+      Permission.find({ "roles": { $in: user.roles } }, function (err, permissions) {
+        if (err) {
+          return res.status(500).json({
+            "message": err
+          });
+        }
+        if (permissions.length) {
+          let mapPermissions = {};
+          for (let permission of permissions) {
+            mapPermissions[`${permission.service}/${permission.module}${permission.action}`] = permission.grant;
+          }
+          user.permissions = Object.assign(mapPermissions, user.permissions);
+        }
+        res.status(200).json(user);
+      });
     });
-
   });
 };
 
@@ -157,9 +173,7 @@ exports.currentStr = function (req, res, next) {
       });
       var tmp = user.toJSON();
       var resp = JSON.stringify(tmp)
-      console.log("@@@Meta: ", user)
-      console.log("@@@USER: ", tmp)
-      res.status(200).json({value: resp});
+      res.status(200).json({ value: resp });
     });
 
   });
