@@ -82,11 +82,11 @@ var UserSchema = new Schema({
       referrer:{
         type: String,
         default: ''
-      },
-    productsSuggested: {
-        type: String,
-        default: '{}'
       }
+    },
+    permissions: {
+      type: Object,
+      default: {}
     }
 });
 
