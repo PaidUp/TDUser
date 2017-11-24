@@ -120,7 +120,6 @@ exports.createAll = function (req, res) {
 
 exports.me = function (req, res, next) {
   authService.decryptToken(req.query.token, function (err, id) {
-    console.log(err)
     if (err) {
 
       return res.status(401).json({
