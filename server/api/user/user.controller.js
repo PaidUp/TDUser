@@ -102,9 +102,6 @@ exports.createAll = function (req, res) {
   if (!body.phone) {
     return res.status(400).json({ message: 'phone is required' });
   }
-  if (!body.referrer) {
-    return res.status(400).json({ message: 'referrer is required' });
-  }
 
 
 

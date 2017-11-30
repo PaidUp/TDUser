@@ -57,8 +57,14 @@ function createAll(user, cb) {
   newUser.addresses = [newAddress];
   newUser.contacts = [newContact];
 
-  newUser.meta = {
-    referrer: user.referrer
+  if(user.referrer){
+    newUser.meta = {
+      referrer: user.referrer
+    }
+  }
+
+  if(user.role){
+    newUser.roles = [user.role]
   }
 
   newUser.save(function (err, data) {
