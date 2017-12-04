@@ -100,6 +100,7 @@ function validateToken(req, res, next) {
  * Returns a jwt token signed by the app secret
  */
 function signToken(id, rembemberMe) {
+  console.log("@@PArams: ", `${id} rem: ${rembemberMe}`)
   var expireTime = TOKEN_EXPIRATION_MIN * 60;
   if(rembemberMe){
       expireTime = TOKEN_EXPIRATION_MAX * 60;

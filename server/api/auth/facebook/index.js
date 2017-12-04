@@ -44,7 +44,7 @@ router.post('/', function(req, res, next) {
             userService.createFacebookUser(fbUser, function(err, data) {
               if (err) return res.status(500).json(err);
               //err
-              var token = authService.signToken(data._id);
+              var token = authService.signToken(data._id, req.body.rememberMe);
               return res.status(200).json({token : token});
             });
           } else {
@@ -52,12 +52,12 @@ router.post('/', function(req, res, next) {
               // login with merge
               userService.mergeFacebookUser({user:user,fbUser:fbUser}, function(err, data) {
                 if (err) return res.status(500).json(err);
-                var token = authService.signToken(data._id);
+                var token = authService.signToken(data._id, req.body.rememberMe);
                 return res.status(200).json({token: token});
               });
             } else {
               // login
-              var token = authService.signToken(user._id);
+              var token = authService.signToken(user._id, req.body.rememberMe);
               return res.status(200).json({token: token});
             }
           }
