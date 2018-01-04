@@ -9,7 +9,7 @@ var router = express.Router();
 
 //router.post('/products/save', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.save);
 //router.post('/save', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.save);
-//router.post('/delete', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.findAndDelete);
+router.post('/delete', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.findAndDelete);
 router.get('/:email', authCoreService.isAuthenticatedServer(config.TDTokens.me), controller.findByEmail);
 
 module.exports = router;
