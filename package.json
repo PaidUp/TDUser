@@ -43,7 +43,7 @@
     "lodash": "4.3.0",
     "method-override": "2.3.5",
     "moment": "2.11.2",
-    "mongoose": "4.4.1",
+    "mongoose": "5.7.8",
     "morgan": "1.6.1",
     "node-uuid": "1.4.7",
     "nodemailer": "2.1.0",
