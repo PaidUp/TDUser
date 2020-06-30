@@ -35,7 +35,7 @@
     "email-templates": "2.1.0",
     "errorhandler": "1.4.3",
     "express": "4.13.4",
-    "express-jwt": "3.3.0",
+    "express-jwt": "6.0.0",
     "express-session": "1.13.0",
     "fb": "1.0.2",
     "is-valid-ssn": "0.0.2",
