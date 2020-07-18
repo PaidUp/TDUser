@@ -40,7 +40,7 @@
     "fb": "1.0.2",
     "is-valid-ssn": "0.0.2",
     "jsonwebtoken": "5.5.4",
-    "lodash": "4.3.0",
+    "lodash": "4.17.19",
     "method-override": "2.3.5",
     "moment": "2.11.2",
     "mongoose": "4.4.1",
